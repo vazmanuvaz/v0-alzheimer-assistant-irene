@@ -24,9 +24,26 @@ const DEFAULT_SETTINGS: AppSettings = {
 };
 
 export default function Page() {
+  // Initialize settings from localStorage immediately
+  const getInitialSettings = () => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('appSettings');
+      if (saved) {
+        try {
+          return JSON.parse(saved);
+        } catch (error) {
+          console.error('[v0] Error cargando configuración:', error);
+        }
+      }
+    }
+    return DEFAULT_SETTINGS;
+  };
+
+  const initialSettings = getInitialSettings();
+  
   const [state, setState] = useState<AppState>('idle');
-  const [settings, setSettings] = useState<AppSettings>(DEFAULT_SETTINGS);
-  const [statusText, setStatusText] = useState(`Hola, soy ${DEFAULT_SETTINGS.petName}`);
+  const [settings, setSettings] = useState<AppSettings>(initialSettings);
+  const [statusText, setStatusText] = useState(`Hola, soy ${initialSettings.petName}`);
   const [voice, setVoice] = useState<'female' | 'male'>('female');
   const [restMode, setRestMode] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
@@ -50,18 +67,6 @@ export default function Page() {
 
     if ('Notification' in window && Notification.permission === 'default') {
       Notification.requestPermission();
-    }
-
-    // Cargar configuración guardada
-    const saved = localStorage.getItem('appSettings');
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved);
-        setSettings(parsed);
-        setStatusText(`Hola, soy ${parsed.petName}`);
-      } catch (error) {
-        console.error('[v0] Error cargando configuración:', error);
-      }
     }
   }, []);
 

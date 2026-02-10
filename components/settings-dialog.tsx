@@ -44,19 +44,19 @@ export function SettingsDialog({ onSettingsChange }: SettingsDialogProps) {
   const [open, setOpen] = useState(false);
   const [settings, setSettings] = useState<AppSettings>(DEFAULT_SETTINGS);
 
-  // Cargar configuración del localStorage al montar
+  // Cargar configuración del localStorage al montar (solo una vez)
   useEffect(() => {
     const saved = localStorage.getItem('appSettings');
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
         setSettings(parsed);
-        onSettingsChange(parsed);
       } catch (error) {
         console.error('[v0] Error cargando configuración:', error);
       }
     }
-  }, [onSettingsChange]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleSave = () => {
     localStorage.setItem('appSettings', JSON.stringify(settings));
