@@ -37,11 +37,11 @@ export function SchnauzerAvatar({ state }: SchnauzerAvatarProps) {
       const delay = 2500 + Math.random() * 2500;
       blinkTimeoutRef.current = setTimeout(() => {
         setIsBlinking(true);
-        // Blink lasts 150ms
+        // Blink lasts 250ms
         setTimeout(() => {
           setIsBlinking(false);
           scheduleBlink();
-        }, 150);
+        }, 250);
       }, delay);
     };
 
@@ -93,7 +93,7 @@ export function SchnauzerAvatar({ state }: SchnauzerAvatarProps) {
             alt=""
             width={400}
             height={400}
-            className="absolute inset-0 w-full h-full object-cover scale-150 transition-opacity duration-100"
+            className="absolute inset-0 w-full h-full object-cover scale-150 transition-opacity duration-200"
             style={{
               opacity: src === currentImage ? 1 : 0,
               objectPosition: '50% 35%',
