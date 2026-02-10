@@ -219,40 +219,40 @@ function SchnauzerModel({ state }: { state: 'idle' | 'listening' | 'speaking' })
 /* ─── Exported 3D Scene ─── */
 export default function Schnauzer3DScene({ state }: { state: 'idle' | 'listening' | 'speaking' }) {
   return (
-    <div style={{ width: '100%', height: '100%' }}>
-      <Canvas
-        camera={{ position: [0, 0.7, 2.2], fov: 35 }}
-        shadows
-        gl={{ antialias: true, alpha: true }}
-        style={{ width: '100%', height: '100%' }}
+    <Canvas
+      camera={{ position: [0, 0.6, 2.5], fov: 30 }}
+      shadows
+      frameloop="always"
+      gl={{ antialias: true, alpha: true, preserveDrawingBuffer: true }}
+      resize={{ scroll: false }}
+      style={{
+        width: '100%',
+        height: '100%',
+        borderRadius: '50%',
+      }}
+    >
+      <ambientLight intensity={0.7} />
+      <directionalLight position={[3, 5, 4]} intensity={1.2} castShadow />
+      <directionalLight position={[-2, 3, -1]} intensity={0.4} />
+      <pointLight position={[0, 2, 3]} intensity={0.3} color="#ffeedd" />
+
+      <Environment preset="studio" />
+
+      <Float
+        speed={state === 'idle' ? 1.5 : state === 'listening' ? 3 : 2}
+        rotationIntensity={state === 'listening' ? 0.3 : 0.1}
+        floatIntensity={state === 'idle' ? 0.3 : 0.1}
       >
-        <ambientLight intensity={0.6} />
-        <directionalLight
-          position={[3, 5, 4]}
-          intensity={1.2}
-          castShadow
-        />
-        <directionalLight position={[-2, 3, -1]} intensity={0.4} />
-        <pointLight position={[0, 2, 3]} intensity={0.3} color="#ffeedd" />
+        <SchnauzerModel state={state} />
+      </Float>
 
-        <Environment preset="studio" />
-
-        <Float
-          speed={state === 'idle' ? 1.5 : state === 'listening' ? 3 : 2}
-          rotationIntensity={state === 'listening' ? 0.3 : 0.1}
-          floatIntensity={state === 'idle' ? 0.3 : 0.1}
-        >
-          <SchnauzerModel state={state} />
-        </Float>
-
-        <ContactShadows
-          position={[0, -0.15, 0]}
-          opacity={0.4}
-          scale={3}
-          blur={2}
-          far={2}
-        />
-      </Canvas>
-    </div>
+      <ContactShadows
+        position={[0, -0.15, 0]}
+        opacity={0.4}
+        scale={3}
+        blur={2}
+        far={2}
+      />
+    </Canvas>
   );
 }

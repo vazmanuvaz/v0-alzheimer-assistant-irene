@@ -55,19 +55,14 @@ export function SchnauzerAvatar({ state }: SchnauzerAvatarProps) {
   }
 
   return (
-    <div className="relative w-72 h-72">
-      {/* Circular background */}
-      <div
-        className="absolute inset-0 rounded-full"
-        style={{
-          background:
-            'radial-gradient(circle, #dbeafe 0%, #bfdbfe 70%, #93c5fd 100%)',
-        }}
-      />
-      {/* Canvas container - not clipped by overflow-hidden */}
-      <div className="absolute inset-0">
-        <Schnauzer3DScene state={state} />
-      </div>
+    <div
+      className="w-72 h-72 rounded-full"
+      style={{
+        background:
+          'radial-gradient(circle, #dbeafe 0%, #bfdbfe 70%, #93c5fd 100%)',
+      }}
+    >
+      <Schnauzer3DScene state={state} />
     </div>
   );
 }
