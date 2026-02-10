@@ -219,39 +219,40 @@ function SchnauzerModel({ state }: { state: 'idle' | 'listening' | 'speaking' })
 /* ─── Exported 3D Scene ─── */
 export default function Schnauzer3DScene({ state }: { state: 'idle' | 'listening' | 'speaking' }) {
   return (
-    <Canvas
-      camera={{ position: [0, 0.7, 2.2], fov: 35 }}
-      shadows
-      gl={{ antialias: true, alpha: true }}
-    >
-      <ambientLight intensity={0.6} />
-      <directionalLight
-        position={[3, 5, 4]}
-        intensity={1.2}
-        castShadow
-        shadow-mapSize-width={512}
-        shadow-mapSize-height={512}
-      />
-      <directionalLight position={[-2, 3, -1]} intensity={0.4} />
-      <pointLight position={[0, 2, 3]} intensity={0.3} color="#ffeedd" />
-
-      <Environment preset="studio" />
-
-      <Float
-        speed={state === 'idle' ? 1.5 : state === 'listening' ? 3 : 2}
-        rotationIntensity={state === 'listening' ? 0.3 : 0.1}
-        floatIntensity={state === 'idle' ? 0.3 : 0.1}
+    <div style={{ width: '100%', height: '100%' }}>
+      <Canvas
+        camera={{ position: [0, 0.7, 2.2], fov: 35 }}
+        shadows
+        gl={{ antialias: true, alpha: true }}
+        style={{ width: '100%', height: '100%' }}
       >
-        <SchnauzerModel state={state} />
-      </Float>
+        <ambientLight intensity={0.6} />
+        <directionalLight
+          position={[3, 5, 4]}
+          intensity={1.2}
+          castShadow
+        />
+        <directionalLight position={[-2, 3, -1]} intensity={0.4} />
+        <pointLight position={[0, 2, 3]} intensity={0.3} color="#ffeedd" />
 
-      <ContactShadows
-        position={[0, -0.15, 0]}
-        opacity={0.4}
-        scale={3}
-        blur={2}
-        far={2}
-      />
-    </Canvas>
+        <Environment preset="studio" />
+
+        <Float
+          speed={state === 'idle' ? 1.5 : state === 'listening' ? 3 : 2}
+          rotationIntensity={state === 'listening' ? 0.3 : 0.1}
+          floatIntensity={state === 'idle' ? 0.3 : 0.1}
+        >
+          <SchnauzerModel state={state} />
+        </Float>
+
+        <ContactShadows
+          position={[0, -0.15, 0]}
+          opacity={0.4}
+          scale={3}
+          blur={2}
+          far={2}
+        />
+      </Canvas>
+    </div>
   );
 }
