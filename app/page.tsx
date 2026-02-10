@@ -24,26 +24,9 @@ const DEFAULT_SETTINGS: AppSettings = {
 };
 
 export default function Page() {
-  // Initialize settings from localStorage immediately
-  const getInitialSettings = () => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('appSettings');
-      if (saved) {
-        try {
-          return JSON.parse(saved);
-        } catch (error) {
-          console.error('[v0] Error cargando configuración:', error);
-        }
-      }
-    }
-    return DEFAULT_SETTINGS;
-  };
-
-  const initialSettings = getInitialSettings();
-  
   const [state, setState] = useState<AppState>('idle');
-  const [settings, setSettings] = useState<AppSettings>(initialSettings);
-  const [statusText, setStatusText] = useState(`Hola, soy ${initialSettings.petName}`);
+  const [settings, setSettings] = useState<AppSettings>(DEFAULT_SETTINGS);
+  const [statusText, setStatusText] = useState(`Hola, soy ${DEFAULT_SETTINGS.petName}`);
   const [voice, setVoice] = useState<'female' | 'male'>('female');
   const [restMode, setRestMode] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
@@ -60,6 +43,20 @@ export default function Page() {
       await handleScheduledMessage(instruction);
     },
   });
+
+  // Cargar settings desde localStorage al montar (client-only)
+  useEffect(() => {
+    const saved = localStorage.getItem('appSettings');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved) as AppSettings;
+        setSettings(parsed);
+        setStatusText(`Hola, soy ${parsed.petName}`);
+      } catch (error) {
+        console.error('[v0] Error cargando configuración:', error);
+      }
+    }
+  }, []);
 
   // Registrar service worker y solicitar permisos
   useEffect(() => {

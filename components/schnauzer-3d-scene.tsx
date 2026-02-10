@@ -1,5 +1,3 @@
-'use client';
-
 import { useRef, useMemo } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { Environment, Float, ContactShadows } from '@react-three/drei';
