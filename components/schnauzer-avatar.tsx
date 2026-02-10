@@ -16,7 +16,7 @@ interface SchnauzerAvatarProps {
 // - Ears down, mouth open = speaking
 const IMAGES = {
   idle: '/dog-ears-down.png',
-  blink: '/dog-blink.jpg',
+  blink: '/dog-blink.png',
   listening: '/dog-ears-up.png',
   speaking: '/dog-mouth-open.png',
 } as const;
@@ -91,12 +91,12 @@ export function SchnauzerAvatar({ state }: SchnauzerAvatarProps) {
             key={src}
             src={src || "/placeholder.svg"}
             alt=""
-            width={288}
-            height={288}
-            className="absolute inset-0 w-full h-full object-contain transition-opacity duration-100"
+            width={400}
+            height={400}
+            className="absolute inset-0 w-full h-full object-cover scale-150 transition-opacity duration-100"
             style={{
               opacity: src === currentImage ? 1 : 0,
-              padding: '16px',
+              objectPosition: '50% 35%',
             }}
             priority
             draggable={false}
