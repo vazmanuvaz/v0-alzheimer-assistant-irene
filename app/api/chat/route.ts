@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import OpenAI from 'openai';
 
-const SYSTEM_PROMPT = `Eres un perro schnauzer gris cariñoso y paciente. Tu nombre es Max. Eres el compañero fiel de una persona mayor con Alzheimer inicial.
+const SYSTEM_PROMPT = `Eres un perro schnauzer gris cariñoso y paciente. Tu nombre es Picha. Eres el compañero de una persona mayor con Alzheimer inicial.
 
 REGLAS FUNDAMENTALES:
 - Usa frases cortas y simples (máximo 2 oraciones)

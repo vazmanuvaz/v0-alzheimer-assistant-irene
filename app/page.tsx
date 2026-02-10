@@ -13,7 +13,7 @@ import { Mic, MicOff, Moon } from 'lucide-react';
 type AppState = 'idle' | 'listening' | 'processing' | 'speaking';
 
 const DEFAULT_SETTINGS: AppSettings = {
-  petName: 'Max',
+  petName: 'Picha',
   schedules: [
     { hour: 10, instruction: 'Hola, ¿cómo te sentís hoy? ¿Querés contarme algo lindo?' },
     { hour: 13, instruction: '¿Te acordás del nombre de tu mamá? Me encantaría que me cuentes algo de ella.' },
