@@ -2,16 +2,15 @@
 
 import { useEffect, useCallback } from 'react';
 
-const SCHEDULED_TIMES = [10, 13, 16, 19, 21]; // Horas del día
-
 interface SchedulerOptions {
-  onScheduledMessage: () => void;
+  onScheduledMessage: (instruction: string) => void;
   enabled: boolean;
+  schedules: Array<{ hour: number; instruction: string }>;
 }
 
-export function useScheduler({ onScheduledMessage, enabled }: SchedulerOptions) {
+export function useScheduler({ onScheduledMessage, enabled, schedules }: SchedulerOptions) {
   const checkSchedule = useCallback(() => {
-    if (!enabled) return;
+    if (!enabled || schedules.length === 0) return;
 
     const now = new Date();
     const currentHour = now.getHours();
@@ -27,20 +26,23 @@ export function useScheduler({ onScheduledMessage, enabled }: SchedulerOptions) 
       return; // Ya se ejecutó
     }
 
+    // Buscar si hay un schedule para esta hora
+    const currentSchedule = schedules.find((s) => s.hour === currentHour);
+
     // Verificar si es una hora programada y estamos en los primeros 2 minutos
-    if (SCHEDULED_TIMES.includes(currentHour) && currentMinute < 2) {
+    if (currentSchedule && currentMinute < 2) {
       console.log('[v0] Ejecutando mensaje programado para las', currentHour);
-      
+
       // Guardar ejecución
       localStorage.setItem(
         'lastScheduledExecution',
         JSON.stringify({ date: today, hour: currentHour })
       );
 
-      // Ejecutar callback
-      onScheduledMessage();
+      // Ejecutar callback con la instrucción
+      onScheduledMessage(currentSchedule.instruction);
     }
-  }, [onScheduledMessage, enabled]);
+  }, [onScheduledMessage, enabled, schedules]);
 
   useEffect(() => {
     // Chequear inmediatamente

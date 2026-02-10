@@ -7,21 +7,26 @@ import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { useScheduler } from '@/hooks/use-scheduler';
 import { registerServiceWorker } from '@/lib/register-sw';
+import { SettingsDialog, type AppSettings } from '@/components/settings-dialog';
 import { Mic, MicOff, Moon } from 'lucide-react';
 
 type AppState = 'idle' | 'listening' | 'processing' | 'speaking';
 
-const SCHEDULED_PROMPTS = [
-  'Hola, ¿cómo te sentís hoy? ¿Querés contarme algo lindo?',
-  '¿Te acordás del nombre de tu mamá? Me encantaría que me cuentes algo de ella.',
-  'Vamos a jugar un poco. Decime: una flor, un color y un animal. Después los repetimos juntos.',
-  '¿Preferís tomar té o café? Contame cuál te gusta más.',
-  '¿Sabés qué día es hoy? No importa si no te acordás, estoy acá para acompañarte.',
-];
+const DEFAULT_SETTINGS: AppSettings = {
+  petName: 'Max',
+  schedules: [
+    { hour: 10, instruction: 'Hola, ¿cómo te sentís hoy? ¿Querés contarme algo lindo?' },
+    { hour: 13, instruction: '¿Te acordás del nombre de tu mamá? Me encantaría que me cuentes algo de ella.' },
+    { hour: 16, instruction: 'Vamos a jugar un poco. Decime: una flor, un color y un animal. Después los repetimos juntos.' },
+    { hour: 19, instruction: '¿Preferís tomar té o café? Contame cuál te gusta más.' },
+    { hour: 21, instruction: '¿Sabés qué día es hoy? No importa si no te acordás, estoy acá para acompañarte.' },
+  ],
+};
 
 export default function Page() {
   const [state, setState] = useState<AppState>('idle');
-  const [statusText, setStatusText] = useState('Hola, soy Max');
+  const [settings, setSettings] = useState<AppSettings>(DEFAULT_SETTINGS);
+  const [statusText, setStatusText] = useState(`Hola, soy ${DEFAULT_SETTINGS.petName}`);
   const [voice, setVoice] = useState<'female' | 'male'>('female');
   const [restMode, setRestMode] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
@@ -33,22 +38,37 @@ export default function Page() {
   // Scheduler para mensajes automáticos
   useScheduler({
     enabled: !restMode,
-    onScheduledMessage: async () => {
-      // Elegir un prompt aleatorio
-      const prompt =
-        SCHEDULED_PROMPTS[Math.floor(Math.random() * SCHEDULED_PROMPTS.length)];
-      await handleScheduledMessage(prompt);
+    schedules: settings.schedules,
+    onScheduledMessage: async (instruction: string) => {
+      await handleScheduledMessage(instruction);
     },
   });
 
   // Registrar service worker y solicitar permisos
   useEffect(() => {
     registerServiceWorker();
-    
+
     if ('Notification' in window && Notification.permission === 'default') {
       Notification.requestPermission();
     }
+
+    // Cargar configuración guardada
+    const saved = localStorage.getItem('appSettings');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        setSettings(parsed);
+        setStatusText(`Hola, soy ${parsed.petName}`);
+      } catch (error) {
+        console.error('[v0] Error cargando configuración:', error);
+      }
+    }
   }, []);
+
+  const handleSettingsChange = (newSettings: AppSettings) => {
+    setSettings(newSettings);
+    setStatusText(`Hola, soy ${newSettings.petName}`);
+  };
 
   const handleScheduledMessage = async (message: string) => {
     try {
@@ -88,7 +108,7 @@ export default function Page() {
     } catch (error) {
       console.error('[v0] Error en mensaje programado:', error);
       setState('idle');
-      setStatusText('Hola, soy Max');
+      setStatusText(`Hola, soy ${settings.petName}`);
     }
   };
 
@@ -198,27 +218,31 @@ export default function Page() {
 
       {/* Controles superiores para familiares */}
       <div className="w-full max-w-md flex justify-between items-center gap-4 p-4 bg-white rounded-xl shadow-sm">
-        <div className="flex items-center gap-2">
-          <Switch
-            id="voice-mode"
-            checked={voice === 'male'}
-            onCheckedChange={(checked) => setVoice(checked ? 'male' : 'female')}
-          />
-          <Label htmlFor="voice-mode" className="text-sm">
-            Voz: {voice === 'female' ? 'Mujer' : 'Hombre'}
-          </Label>
-        </div>
+        <SettingsDialog onSettingsChange={handleSettingsChange} />
 
-        <div className="flex items-center gap-2">
-          <Switch
-            id="rest-mode"
-            checked={restMode}
-            onCheckedChange={setRestMode}
-          />
-          <Label htmlFor="rest-mode" className="text-sm flex items-center gap-1">
-            <Moon className="w-4 h-4" />
-            Descanso
-          </Label>
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
+            <Switch
+              id="voice-mode"
+              checked={voice === 'male'}
+              onCheckedChange={(checked) => setVoice(checked ? 'male' : 'female')}
+            />
+            <Label htmlFor="voice-mode" className="text-sm">
+              Voz: {voice === 'female' ? 'Mujer' : 'Hombre'}
+            </Label>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <Switch
+              id="rest-mode"
+              checked={restMode}
+              onCheckedChange={setRestMode}
+            />
+            <Label htmlFor="rest-mode" className="text-sm flex items-center gap-1">
+              <Moon className="w-4 h-4" />
+              Descanso
+            </Label>
+          </div>
         </div>
       </div>
 
