@@ -1,10 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import OpenAI from 'openai';
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-
 const SYSTEM_PROMPT = `Eres un perro schnauzer gris cariñoso y paciente. Tu nombre es Max. Eres el compañero fiel de una persona mayor con Alzheimer inicial.
 
 REGLAS FUNDAMENTALES:
@@ -27,6 +23,10 @@ NUNCA uses respuestas largas o complejas.`;
 
 export async function POST(request: NextRequest) {
   try {
+    const openai = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY,
+    });
+
     const body = await request.json();
     const { message, context } = body;
 
