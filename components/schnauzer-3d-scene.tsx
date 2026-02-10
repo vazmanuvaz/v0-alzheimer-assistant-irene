@@ -27,16 +27,16 @@ function SchnauzerModel({ state }: { state: 'idle' | 'listening' | 'speaking' })
   useFrame((frameState) => {
     const t = frameState.clock.getElapsedTime();
 
-    if (groupRef.current) {
+      if (groupRef.current) {
       if (state === 'idle') {
-        groupRef.current.rotation.y = Math.sin(t * 0.5) * 0.1;
-        groupRef.current.position.y = Math.sin(t * 1.2) * 0.02;
+        groupRef.current.rotation.y = Math.sin(t * 0.5) * 0.08;
+        groupRef.current.position.y = -0.1 + Math.sin(t * 1.2) * 0.01;
       } else if (state === 'listening') {
-        groupRef.current.rotation.y = Math.sin(t * 2) * 0.15;
-        groupRef.current.position.y = 0;
+        groupRef.current.rotation.y = Math.sin(t * 2) * 0.1;
+        groupRef.current.position.y = -0.1;
       } else {
         groupRef.current.rotation.y = Math.sin(t * 1.5) * 0.05;
-        groupRef.current.position.y = Math.sin(t * 3) * 0.01;
+        groupRef.current.position.y = -0.1 + Math.sin(t * 3) * 0.005;
       }
     }
 
@@ -72,7 +72,7 @@ function SchnauzerModel({ state }: { state: 'idle' | 'listening' | 'speaking' })
   });
 
   return (
-    <group ref={groupRef} position={[0, -0.3, 0]}>
+    <group ref={groupRef} position={[0, -0.1, 0]}>
       {/* BODY */}
       <mesh position={[0, 0.4, -0.15]} castShadow>
         <capsuleGeometry args={[0.35, 0.5, 8, 16]} />
@@ -217,10 +217,18 @@ function SchnauzerModel({ state }: { state: 'idle' | 'listening' | 'speaking' })
 }
 
 /* ─── Exported 3D Scene ─── */
+function CameraController() {
+  useFrame(({ camera }) => {
+    // Point camera at the center of the dog model (roughly y=0.4)
+    camera.lookAt(0, 0.4, 0);
+  });
+  return null;
+}
+
 export default function Schnauzer3DScene({ state }: { state: 'idle' | 'listening' | 'speaking' }) {
   return (
     <Canvas
-      camera={{ position: [0, 0.6, 2.5], fov: 30 }}
+      camera={{ position: [0, 0.5, 2.8], fov: 28 }}
       shadows
       frameloop="always"
       gl={{ antialias: true, alpha: true, preserveDrawingBuffer: true }}
@@ -231,7 +239,8 @@ export default function Schnauzer3DScene({ state }: { state: 'idle' | 'listening
         borderRadius: '50%',
       }}
     >
-      <ambientLight intensity={0.7} />
+      <CameraController />
+      <ambientLight intensity={0.8} />
       <directionalLight position={[3, 5, 4]} intensity={1.2} castShadow />
       <directionalLight position={[-2, 3, -1]} intensity={0.4} />
       <pointLight position={[0, 2, 3]} intensity={0.3} color="#ffeedd" />
@@ -240,18 +249,18 @@ export default function Schnauzer3DScene({ state }: { state: 'idle' | 'listening
 
       <Float
         speed={state === 'idle' ? 1.5 : state === 'listening' ? 3 : 2}
-        rotationIntensity={state === 'listening' ? 0.3 : 0.1}
-        floatIntensity={state === 'idle' ? 0.3 : 0.1}
+        rotationIntensity={state === 'listening' ? 0.2 : 0.05}
+        floatIntensity={state === 'idle' ? 0.15 : 0.05}
       >
         <SchnauzerModel state={state} />
       </Float>
 
       <ContactShadows
-        position={[0, -0.15, 0]}
+        position={[0, -0.5, 0]}
         opacity={0.4}
         scale={3}
         blur={2}
-        far={2}
+        far={3}
       />
     </Canvas>
   );
