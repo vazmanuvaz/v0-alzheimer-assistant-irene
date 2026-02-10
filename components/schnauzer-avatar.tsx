@@ -93,7 +93,7 @@ export function SchnauzerAvatar({ state }: SchnauzerAvatarProps) {
             alt=""
             width={400}
             height={400}
-            className="absolute inset-0 w-full h-full object-cover scale-150 transition-opacity duration-200"
+            className="absolute inset-0 w-full h-full object-cover scale-125 transition-opacity duration-200"
             style={{
               opacity: src === currentImage ? 1 : 0,
               objectPosition: '50% 35%',
