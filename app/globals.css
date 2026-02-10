@@ -170,4 +170,16 @@ body {
   .animate-listening {
     animation: wiggle 0.5s ease-in-out infinite;
   }
+
+  @keyframes pulse-glow {
+    0%,
+    100% {
+      opacity: 0.5;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.04);
+    }
+  }
 }
