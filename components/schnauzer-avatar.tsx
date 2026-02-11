@@ -64,7 +64,7 @@ export function SchnauzerAvatar({ state }: SchnauzerAvatarProps) {
   })();
 
   return (
-    <div className="relative w-72 h-72">
+    <div className="relative w-64 h-64 sm:w-72 sm:h-72">
       {/* Glow ring for active states */}
       <div
         className="absolute -inset-3 rounded-full transition-all duration-700"

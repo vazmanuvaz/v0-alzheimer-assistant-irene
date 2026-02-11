@@ -243,22 +243,22 @@ export default function Page() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-between p-6 bg-gradient-to-b from-amber-50 to-orange-50">
+    <div className="min-h-screen flex flex-col items-center justify-between p-4 sm:p-6 bg-gradient-to-b from-amber-50 to-orange-50">
       {/* Audio element */}
       <audio ref={audioRef} onEnded={handleAudioEnded} className="hidden" />
 
       {/* Controles superiores para familiares */}
-      <div className="w-full max-w-md flex justify-between items-center gap-4 p-4 bg-white rounded-xl shadow-sm">
+      <div className="w-full max-w-md flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-4 p-3 sm:p-4 bg-white rounded-xl shadow-sm">
         <SettingsDialog onSettingsChange={handleSettingsChange} />
 
-        <div className="flex items-center gap-4">
+        <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4">
           <div className="flex items-center gap-2">
             <Switch
               id="voice-mode"
               checked={voice === 'male'}
               onCheckedChange={(checked) => setVoice(checked ? 'male' : 'female')}
             />
-            <Label htmlFor="voice-mode" className="text-sm">
+            <Label htmlFor="voice-mode" className="text-xs sm:text-sm whitespace-nowrap">
               Voz: {voice === 'female' ? 'Mujer' : 'Hombre'}
             </Label>
           </div>
@@ -269,8 +269,8 @@ export default function Page() {
               checked={restMode}
               onCheckedChange={setRestMode}
             />
-            <Label htmlFor="rest-mode" className="text-sm flex items-center gap-1">
-              <Moon className="w-4 h-4" />
+            <Label htmlFor="rest-mode" className="text-xs sm:text-sm flex items-center gap-1 whitespace-nowrap">
+              <Moon className="w-3 h-3 sm:w-4 sm:h-4" />
               Descanso
             </Label>
           </div>
@@ -278,7 +278,7 @@ export default function Page() {
       </div>
 
       {/* Área central con el avatar */}
-      <div className="flex flex-col items-center gap-8 flex-1 justify-center">
+      <div className="flex flex-col items-center gap-6 sm:gap-8 flex-1 justify-center w-full max-w-md px-4">
         <SchnauzerAvatar
           state={
             restMode
@@ -291,14 +291,14 @@ export default function Page() {
           }
         />
 
-        <h1 className="text-3xl font-bold text-gray-800 text-center leading-relaxed">
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 text-center leading-relaxed px-4">
           {statusText}
         </h1>
 
         {/* Botón principal */}
         <Button
           size="lg"
-          className={`text-2xl py-8 px-12 rounded-full font-bold shadow-xl transition-all ${
+          className={`text-xl sm:text-2xl py-6 sm:py-8 px-8 sm:px-12 rounded-full font-bold shadow-xl transition-all w-full sm:w-auto ${
             isRecording
               ? 'bg-red-500 hover:bg-red-600 animate-pulse'
               : 'bg-blue-500 hover:bg-blue-600'
@@ -308,12 +308,12 @@ export default function Page() {
         >
           {isRecording ? (
             <>
-              <MicOff className="w-8 h-8 mr-3" />
+              <MicOff className="w-6 h-6 sm:w-8 sm:h-8 mr-2 sm:mr-3" />
               DEJAR DE HABLAR
             </>
           ) : (
             <>
-              <Mic className="w-8 h-8 mr-3" />
+              <Mic className="w-6 h-6 sm:w-8 sm:h-8 mr-2 sm:mr-3" />
               HABLAR
             </>
           )}
@@ -335,7 +335,7 @@ export default function Page() {
       </div>
 
       {/* Espacio inferior */}
-      <div className="h-16" />
+      <div className="h-12 sm:h-16" />
     </div>
   );
 }
