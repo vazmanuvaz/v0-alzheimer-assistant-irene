@@ -280,7 +280,15 @@ export default function Page() {
       {/* Área central con el avatar */}
       <div className="flex flex-col items-center gap-8 flex-1 justify-center">
         <SchnauzerAvatar
-          state={state === 'idle' ? 'idle' : state === 'listening' ? 'listening' : 'speaking'}
+          state={
+            restMode
+              ? 'sleeping'
+              : state === 'idle'
+                ? 'idle'
+                : state === 'listening'
+                  ? 'listening'
+                  : 'speaking'
+          }
         />
 
         <h1 className="text-3xl font-bold text-gray-800 text-center leading-relaxed">

@@ -3,7 +3,7 @@
 import { useEffect, useState, useRef } from 'react';
 import Image from 'next/image';
 
-type AvatarState = 'idle' | 'listening' | 'speaking';
+type AvatarState = 'idle' | 'listening' | 'speaking' | 'sleeping';
 
 interface SchnauzerAvatarProps {
   state: AvatarState;
@@ -19,13 +19,14 @@ const IMAGES = {
   blink: '/dog-blink.png',
   listening: '/dog-ears-up.png',
   speaking: '/dog-mouth-open.png',
+  sleeping: '/dog-sleeping.png',
 } as const;
 
 export function SchnauzerAvatar({ state }: SchnauzerAvatarProps) {
   const [isBlinking, setIsBlinking] = useState(false);
   const blinkTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Blink effect in idle state
+  // Blink effect in idle state (not in sleeping state)
   useEffect(() => {
     if (state !== 'idle') {
       setIsBlinking(false);
@@ -56,6 +57,7 @@ export function SchnauzerAvatar({ state }: SchnauzerAvatarProps) {
 
   // Determine which image to show
   const currentImage = (() => {
+    if (state === 'sleeping') return IMAGES.sleeping;
     if (state === 'idle') return isBlinking ? IMAGES.blink : IMAGES.idle;
     if (state === 'listening') return IMAGES.listening;
     return IMAGES.speaking;
@@ -72,9 +74,15 @@ export function SchnauzerAvatar({ state }: SchnauzerAvatarProps) {
               ? 'radial-gradient(circle, rgba(59,130,246,0.15) 50%, transparent 70%)'
               : state === 'speaking'
                 ? 'radial-gradient(circle, rgba(34,197,94,0.15) 50%, transparent 70%)'
-                : 'transparent',
+                : state === 'sleeping'
+                  ? 'radial-gradient(circle, rgba(139,92,246,0.12) 50%, transparent 70%)'
+                  : 'transparent',
           animation:
-            state !== 'idle' ? 'pulse-glow 2s ease-in-out infinite' : 'none',
+            state === 'sleeping'
+              ? 'pulse-glow 3s ease-in-out infinite'
+              : state !== 'idle'
+                ? 'pulse-glow 2s ease-in-out infinite'
+                : 'none',
         }}
       />
 
@@ -108,11 +116,13 @@ export function SchnauzerAvatar({ state }: SchnauzerAvatarProps) {
       <div className="absolute bottom-2 right-2 z-10">
         <div
           className={`w-4 h-4 rounded-full border-2 border-white shadow-md transition-colors duration-300 ${
-            state === 'idle'
-              ? 'bg-gray-400'
-              : state === 'listening'
-                ? 'bg-blue-500 animate-pulse'
-                : 'bg-green-500 animate-pulse'
+            state === 'sleeping'
+              ? 'bg-purple-400 animate-pulse'
+              : state === 'idle'
+                ? 'bg-gray-400'
+                : state === 'listening'
+                  ? 'bg-blue-500 animate-pulse'
+                  : 'bg-green-500 animate-pulse'
           }`}
         />
       </div>
