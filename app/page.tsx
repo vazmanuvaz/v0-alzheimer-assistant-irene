@@ -286,12 +286,14 @@ export default function Page() {
         <Button
           size="lg"
           className={`text-xl sm:text-2xl py-6 sm:py-8 px-8 sm:px-12 rounded-full font-bold shadow-xl transition-all w-full sm:w-auto ${
-            isRecording
-              ? 'bg-red-500 hover:bg-red-600 animate-pulse'
-              : 'bg-blue-500 hover:bg-blue-600'
+            restMode || state === 'processing' || state === 'speaking'
+              ? 'bg-gray-400 cursor-not-allowed'
+              : isRecording
+                ? 'bg-red-500 hover:bg-red-600 animate-pulse'
+                : 'bg-blue-500 hover:bg-blue-600'
           }`}
           onClick={isRecording ? stopRecording : startRecording}
-          disabled={state === 'processing' || state === 'speaking'}
+          disabled={restMode || state === 'processing' || state === 'speaking'}
         >
           {isRecording ? (
             <>
