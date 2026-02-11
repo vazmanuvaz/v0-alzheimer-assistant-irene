@@ -34,6 +34,7 @@ export default function Page() {
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const recordingStartTimeRef = useRef<number>(0);
 
   // Scheduler para mensajes automáticos
   useScheduler({
@@ -133,6 +134,7 @@ export default function Page() {
       };
 
       mediaRecorder.start();
+      recordingStartTimeRef.current = Date.now();
       setIsRecording(true);
       setState('listening');
       setStatusText('Estoy escuchando...');
@@ -151,6 +153,18 @@ export default function Page() {
 
   const processAudio = async (audioBlob: Blob) => {
     try {
+      // Calcular duración de la grabación
+      const recordingDuration = Date.now() - recordingStartTimeRef.current;
+      console.log('[v0] Duración de grabación:', recordingDuration, 'ms');
+
+      // Validar duración mínima (500ms)
+      if (recordingDuration < 500) {
+        console.log('[v0] Grabación demasiado corta, ignorando');
+        setState('idle');
+        setStatusText('Mantené presionado el botón mientras hablás');
+        return;
+      }
+
       setState('processing');
       setStatusText('Estoy pensando...');
 
