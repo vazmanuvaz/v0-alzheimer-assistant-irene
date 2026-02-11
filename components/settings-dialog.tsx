@@ -17,6 +17,7 @@ import { Settings } from 'lucide-react';
 
 export interface ScheduleConfig {
   hour: number;
+  minute: number;
   instruction: string;
 }
 
@@ -28,11 +29,11 @@ export interface AppSettings {
 const DEFAULT_SETTINGS: AppSettings = {
   petName: 'Max',
   schedules: [
-    { hour: 10, instruction: 'Hola, ¿cómo te sentís hoy? ¿Querés contarme algo lindo?' },
-    { hour: 13, instruction: '¿Te acordás del nombre de tu mamá? Me encantaría que me cuentes algo de ella.' },
-    { hour: 16, instruction: 'Vamos a jugar un poco. Decime: una flor, un color y un animal. Después los repetimos juntos.' },
-    { hour: 19, instruction: '¿Preferís tomar té o café? Contame cuál te gusta más.' },
-    { hour: 21, instruction: '¿Sabés qué día es hoy? No importa si no te acordás, estoy acá para acompañarte.' },
+    { hour: 10, minute: 0, instruction: 'Hola, ¿cómo te sentís hoy? ¿Querés contarme algo lindo?' },
+    { hour: 13, minute: 0, instruction: '¿Te acordás del nombre de tu mamá? Me encantaría que me cuentes algo de ella.' },
+    { hour: 16, minute: 0, instruction: 'Vamos a jugar un poco. Decime: una flor, un color y un animal. Después los repetimos juntos.' },
+    { hour: 19, minute: 0, instruction: '¿Preferís tomar té o café? Contame cuál te gusta más.' },
+    { hour: 21, minute: 0, instruction: '¿Sabés qué día es hoy? No importa si no te acordás, estoy acá para acompañarte.' },
   ],
 };
 
@@ -70,11 +71,11 @@ export function SettingsDialog({ onSettingsChange }: SettingsDialogProps) {
     onSettingsChange(DEFAULT_SETTINGS);
   };
 
-  const updateSchedule = (index: number, field: 'hour' | 'instruction', value: string | number) => {
+  const updateSchedule = (index: number, field: 'hour' | 'minute' | 'instruction', value: string | number) => {
     const newSchedules = [...settings.schedules];
     newSchedules[index] = {
       ...newSchedules[index],
-      [field]: field === 'hour' ? Number(value) : value,
+      [field]: field === 'hour' || field === 'minute' ? Number(value) : value,
     };
     setSettings({ ...settings, schedules: newSchedules });
   };
@@ -82,7 +83,7 @@ export function SettingsDialog({ onSettingsChange }: SettingsDialogProps) {
   const addSchedule = () => {
     setSettings({
       ...settings,
-      schedules: [...settings.schedules, { hour: 12, instruction: '' }],
+      schedules: [...settings.schedules, { hour: 12, minute: 0, instruction: '' }],
     });
   };
 
@@ -136,7 +137,7 @@ export function SettingsDialog({ onSettingsChange }: SettingsDialogProps) {
             <div className="space-y-4">
               {settings.schedules.map((schedule, index) => (
                 <div key={index} className="border rounded-lg p-4 space-y-3 bg-gray-50">
-                  <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-3">
                     <div className="flex-1">
                       <Label htmlFor={`hour-${index}`} className="text-sm">
                         Hora (0-23)
@@ -151,11 +152,25 @@ export function SettingsDialog({ onSettingsChange }: SettingsDialogProps) {
                         className="mt-1"
                       />
                     </div>
+                    <div className="flex-1">
+                      <Label htmlFor={`minute-${index}`} className="text-sm">
+                        Minuto (0-59)
+                      </Label>
+                      <Input
+                        id={`minute-${index}`}
+                        type="number"
+                        min="0"
+                        max="59"
+                        value={schedule.minute}
+                        onChange={(e) => updateSchedule(index, 'minute', e.target.value)}
+                        className="mt-1"
+                      />
+                    </div>
                     <Button
                       variant="destructive"
                       size="sm"
                       onClick={() => removeSchedule(index)}
-                      className="mt-6"
+                      className="mt-6 shrink-0"
                     >
                       Eliminar
                     </Button>

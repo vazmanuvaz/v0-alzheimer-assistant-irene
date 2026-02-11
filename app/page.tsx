@@ -15,11 +15,11 @@ type AppState = 'idle' | 'listening' | 'processing' | 'speaking';
 const DEFAULT_SETTINGS: AppSettings = {
   petName: 'Picha',
   schedules: [
-    { hour: 10, instruction: 'Hola, ¿cómo te sentís hoy? ¿Querés contarme algo lindo?' },
-    { hour: 13, instruction: '¿Te acordás del nombre de tu mamá? Me encantaría que me cuentes algo de ella.' },
-    { hour: 16, instruction: 'Vamos a jugar un poco. Decime: una flor, un color y un animal. Después los repetimos juntos.' },
-    { hour: 19, instruction: '¿Preferís tomar té o café? Contame cuál te gusta más.' },
-    { hour: 21, instruction: '¿Sabés qué día es hoy? No importa si no te acordás, estoy acá para acompañarte.' },
+    { hour: 10, minute: 0, instruction: 'Hola, ¿cómo te sentís hoy? ¿Querés contarme algo lindo?' },
+    { hour: 13, minute: 0, instruction: '¿Te acordás del nombre de tu mamá? Me encantaría que me cuentes algo de ella.' },
+    { hour: 16, minute: 0, instruction: 'Vamos a jugar un poco. Decime: una flor, un color y un animal. Después los repetimos juntos.' },
+    { hour: 19, minute: 0, instruction: '¿Preferís tomar té o café? Contame cuál te gusta más.' },
+    { hour: 21, minute: 0, instruction: '¿Sabés qué día es hoy? No importa si no te acordás, estoy acá para acompañarte.' },
   ],
 };
 
