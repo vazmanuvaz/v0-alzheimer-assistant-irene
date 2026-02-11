@@ -24,7 +24,7 @@ NUNCA uses respuestas largas o complejas.`;
 export async function POST(request: NextRequest) {
   try {
     const openai = new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY,
+      apiKey: process.env.API_KEY_OPENAI,
     });
 
     const body = await request.json();
