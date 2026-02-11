@@ -243,7 +243,7 @@ export default function Page() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-between p-6 bg-gradient-to-b from-blue-50 to-blue-100">
+    <div className="min-h-screen flex flex-col items-center justify-between p-6 bg-gradient-to-b from-amber-50 to-orange-50">
       {/* Audio element */}
       <audio ref={audioRef} onEnded={handleAudioEnded} className="hidden" />
 
