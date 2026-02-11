@@ -27,7 +27,6 @@ export default function Page() {
   const [state, setState] = useState<AppState>('idle');
   const [settings, setSettings] = useState<AppSettings>(DEFAULT_SETTINGS);
   const [statusText, setStatusText] = useState(`Hola, soy ${DEFAULT_SETTINGS.petName}`);
-  const [voice, setVoice] = useState<'female' | 'male'>('female');
   const [restMode, setRestMode] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
 
@@ -96,7 +95,7 @@ export default function Page() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           text: response,
-          voice: voice === 'male' ? 'male' : 'female',
+          voice: 'female',
         }),
       });
 
@@ -218,7 +217,7 @@ export default function Page() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           text: response,
-          voice: voice === 'male' ? 'male' : 'female',
+          voice: 'female',
         }),
       });
 
@@ -248,32 +247,20 @@ export default function Page() {
       <audio ref={audioRef} onEnded={handleAudioEnded} className="hidden" />
 
       {/* Controles superiores para familiares */}
-      <div className="w-full max-w-md flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-4 p-3 sm:p-4 bg-white rounded-xl shadow-sm">
+      <div className="w-full max-w-md flex flex-row justify-center items-center gap-4 sm:gap-6 p-2 sm:p-3 bg-white rounded-xl shadow-sm">
         <SettingsDialog onSettingsChange={handleSettingsChange} />
 
-        <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4">
-          <div className="flex items-center gap-2">
-            <Switch
-              id="voice-mode"
-              checked={voice === 'male'}
-              onCheckedChange={(checked) => setVoice(checked ? 'male' : 'female')}
-            />
-            <Label htmlFor="voice-mode" className="text-xs sm:text-sm whitespace-nowrap">
-              Voz: {voice === 'female' ? 'Mujer' : 'Hombre'}
-            </Label>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <Switch
-              id="rest-mode"
-              checked={restMode}
-              onCheckedChange={setRestMode}
-            />
-            <Label htmlFor="rest-mode" className="text-xs sm:text-sm flex items-center gap-1 whitespace-nowrap">
-              <Moon className="w-3 h-3 sm:w-4 sm:h-4" />
-              Descanso
-            </Label>
-          </div>
+        <div className="flex items-center gap-2">
+          <Switch
+            id="rest-mode"
+            checked={restMode}
+            onCheckedChange={setRestMode}
+            className="scale-90 sm:scale-100"
+          />
+          <Label htmlFor="rest-mode" className="text-xs sm:text-sm flex items-center gap-1 whitespace-nowrap">
+            <Moon className="w-3 h-3 sm:w-4 sm:h-4" />
+            Descanso
+          </Label>
         </div>
       </div>
 
