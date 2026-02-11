@@ -169,6 +169,9 @@ export default function Page() {
       setStatusText('Estoy pensando...');
 
       // Convertir audio a texto
+      console.log('[v0] Tamaño del audio:', audioBlob.size, 'bytes');
+      console.log('[v0] Tipo de audio:', audioBlob.type);
+
       const formData = new FormData();
       formData.append('audio', audioBlob, 'audio.webm');
 
@@ -177,13 +180,25 @@ export default function Page() {
         body: formData,
       });
 
-      const { text } = await sttResponse.json();
+      const sttData = await sttResponse.json();
+      console.log('[v0] Respuesta STT:', sttData);
+
+      if (!sttResponse.ok) {
+        console.error('[v0] Error en STT:', sttData.error);
+        setState('idle');
+        setStatusText('No te escuché bien, ¿podés repetir?');
+        return;
+      }
+
+      const { text } = sttData;
 
       if (!text) {
         setState('idle');
         setStatusText('No te escuché bien, ¿podés repetir?');
         return;
       }
+
+      console.log('[v0] Texto transcrito:', text);
 
       // Obtener respuesta del chat
       const chatResponse = await fetch('/api/chat', {

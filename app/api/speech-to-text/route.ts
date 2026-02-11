@@ -17,17 +17,24 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    console.log('[v0] Audio file size:', audioFile.size, 'bytes');
+    console.log('[v0] Audio file type:', audioFile.type);
+
     const transcription = await openai.audio.transcriptions.create({
       file: audioFile,
       model: 'whisper-1',
       language: 'es',
     });
 
+    console.log('[v0] Transcription result:', transcription.text);
+
     return NextResponse.json({ text: transcription.text });
-  } catch (error) {
+  } catch (error: any) {
     console.error('[v0] Error en STT:', error);
+    console.error('[v0] Error message:', error?.message);
+    console.error('[v0] Error response:', error?.response?.data);
     return NextResponse.json(
-      { error: 'Error al procesar el audio' },
+      { error: error?.message || 'Error al procesar el audio' },
       { status: 500 }
     );
   }
