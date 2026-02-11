@@ -112,20 +112,6 @@ export function SchnauzerAvatar({ state }: SchnauzerAvatarProps) {
         ))}
       </div>
 
-      {/* State indicator dot */}
-      <div className="absolute bottom-2 right-2 z-10">
-        <div
-          className={`w-4 h-4 rounded-full border-2 border-white shadow-md transition-colors duration-300 ${
-            state === 'sleeping'
-              ? 'bg-purple-400 animate-pulse'
-              : state === 'idle'
-                ? 'bg-gray-400'
-                : state === 'listening'
-                  ? 'bg-blue-500 animate-pulse'
-                  : 'bg-green-500 animate-pulse'
-          }`}
-        />
-      </div>
     </div>
   );
 }
