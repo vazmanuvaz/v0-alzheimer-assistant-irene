@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { useScheduler } from '@/hooks/use-scheduler';
+import { useHeartbeat } from '@/hooks/use-heartbeat';
 import { registerServiceWorker } from '@/lib/register-sw';
 import { SettingsDialog } from '@/components/settings-dialog';
 import { Mic, MicOff, Moon } from 'lucide-react';
@@ -24,6 +25,9 @@ export default function Page() {
   const audioChunksRef = useRef<Blob[]>([]);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const recordingStartTimeRef = useRef<number>(0);
+
+  // Heartbeat para detectar desconexión
+  useHeartbeat();
 
   // Scheduler para mensajes automáticos
   useScheduler({
