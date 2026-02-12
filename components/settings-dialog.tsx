@@ -14,61 +14,49 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Settings } from 'lucide-react';
+import { type AppSettings, type ScheduleConfig, DEFAULT_SETTINGS, saveSettings } from '@/lib/settings';
 
-export interface ScheduleConfig {
-  hour: number;
-  minute: number;
-  instruction: string;
-}
-
-export interface AppSettings {
-  petName: string;
-  schedules: ScheduleConfig[];
-}
-
-const DEFAULT_SETTINGS: AppSettings = {
-  petName: 'Max',
-  schedules: [
-    { hour: 10, minute: 0, instruction: 'Hola, ¿cómo te sentís hoy? ¿Querés contarme algo lindo?' },
-    { hour: 13, minute: 0, instruction: '¿Te acordás del nombre de tu mamá? Me encantaría que me cuentes algo de ella.' },
-    { hour: 16, minute: 0, instruction: 'Vamos a jugar un poco. Decime: una flor, un color y un animal. Después los repetimos juntos.' },
-    { hour: 19, minute: 0, instruction: '¿Preferís tomar té o café? Contame cuál te gusta más.' },
-    { hour: 21, minute: 0, instruction: '¿Sabés qué día es hoy? No importa si no te acordás, estoy acá para acompañarte.' },
-  ],
-};
+export type { AppSettings, ScheduleConfig };
 
 interface SettingsDialogProps {
   onSettingsChange: (settings: AppSettings) => void;
+  initialSettings: AppSettings;
 }
 
-export function SettingsDialog({ onSettingsChange }: SettingsDialogProps) {
+export function SettingsDialog({ onSettingsChange, initialSettings }: SettingsDialogProps) {
   const [open, setOpen] = useState(false);
-  const [settings, setSettings] = useState<AppSettings>(DEFAULT_SETTINGS);
+  const [settings, setSettings] = useState<AppSettings>(initialSettings);
+  const [isSaving, setIsSaving] = useState(false);
 
-  // Cargar configuración del localStorage al montar (solo una vez)
+  // Actualizar settings cuando cambien los initialSettings
   useEffect(() => {
-    const saved = localStorage.getItem('appSettings');
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved);
-        setSettings(parsed);
-      } catch (error) {
-        console.error('[v0] Error cargando configuración:', error);
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    setSettings(initialSettings);
+  }, [initialSettings]);
 
-  const handleSave = () => {
-    localStorage.setItem('appSettings', JSON.stringify(settings));
-    onSettingsChange(settings);
-    setOpen(false);
+  const handleSave = async () => {
+    setIsSaving(true);
+    const success = await saveSettings(settings);
+    setIsSaving(false);
+
+    if (success) {
+      onSettingsChange(settings);
+      setOpen(false);
+    } else {
+      alert('Error al guardar la configuración. Por favor intentá de nuevo.');
+    }
   };
 
-  const handleReset = () => {
+  const handleReset = async () => {
     setSettings(DEFAULT_SETTINGS);
-    localStorage.setItem('appSettings', JSON.stringify(DEFAULT_SETTINGS));
-    onSettingsChange(DEFAULT_SETTINGS);
+    setIsSaving(true);
+    const success = await saveSettings(DEFAULT_SETTINGS);
+    setIsSaving(false);
+    
+    if (success) {
+      onSettingsChange(DEFAULT_SETTINGS);
+    } else {
+      alert('Error al restaurar la configuración. Por favor intentá de nuevo.');
+    }
   };
 
   const updateSchedule = (index: number, field: 'hour' | 'minute' | 'instruction', value: string | number) => {
@@ -200,10 +188,12 @@ export function SettingsDialog({ onSettingsChange }: SettingsDialogProps) {
             Restaurar
           </Button>
           <div className="flex gap-2 order-1 sm:order-2">
-            <Button variant="ghost" onClick={() => setOpen(false)} className="text-xs sm:text-sm h-9 sm:h-10 flex-1 sm:flex-none">
+            <Button variant="ghost" onClick={() => setOpen(false)} className="text-xs sm:text-sm h-9 sm:h-10 flex-1 sm:flex-none" disabled={isSaving}>
               Cancelar
             </Button>
-            <Button onClick={handleSave} className="text-xs sm:text-sm h-9 sm:h-10 flex-1 sm:flex-none">Guardar</Button>
+            <Button onClick={handleSave} className="text-xs sm:text-sm h-9 sm:h-10 flex-1 sm:flex-none" disabled={isSaving}>
+              {isSaving ? 'Guardando...' : 'Guardar'}
+            </Button>
           </div>
         </div>
       </DialogContent>

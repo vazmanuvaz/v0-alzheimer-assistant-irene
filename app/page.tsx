@@ -7,21 +7,11 @@ import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { useScheduler } from '@/hooks/use-scheduler';
 import { registerServiceWorker } from '@/lib/register-sw';
-import { SettingsDialog, type AppSettings } from '@/components/settings-dialog';
+import { SettingsDialog } from '@/components/settings-dialog';
 import { Mic, MicOff, Moon } from 'lucide-react';
+import { loadSettings, DEFAULT_SETTINGS, type AppSettings } from '@/lib/settings';
 
 type AppState = 'idle' | 'listening' | 'processing' | 'speaking';
-
-const DEFAULT_SETTINGS: AppSettings = {
-  petName: 'Picha',
-  schedules: [
-    { hour: 10, minute: 0, instruction: 'Hola, ¿cómo te sentís hoy? ¿Querés contarme algo lindo?' },
-    { hour: 13, minute: 0, instruction: '¿Te acordás del nombre de tu mamá? Me encantaría que me cuentes algo de ella.' },
-    { hour: 16, minute: 0, instruction: 'Vamos a jugar un poco. Decime: una flor, un color y un animal. Después los repetimos juntos.' },
-    { hour: 19, minute: 0, instruction: '¿Preferís tomar té o café? Contame cuál te gusta más.' },
-    { hour: 21, minute: 0, instruction: '¿Sabés qué día es hoy? No importa si no te acordás, estoy acá para acompañarte.' },
-  ],
-};
 
 export default function Page() {
   const [state, setState] = useState<AppState>('idle');
@@ -44,18 +34,14 @@ export default function Page() {
     },
   });
 
-  // Cargar settings desde localStorage al montar (client-only)
+  // Cargar settings desde Supabase al montar
   useEffect(() => {
-    const saved = localStorage.getItem('appSettings');
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved) as AppSettings;
-        setSettings(parsed);
-        setStatusText(`Hola, soy ${parsed.petName}`);
-      } catch (error) {
-        console.error('[v0] Error cargando configuración:', error);
-      }
+    async function loadInitialSettings() {
+      const loadedSettings = await loadSettings();
+      setSettings(loadedSettings);
+      setStatusText(`Hola, soy ${loadedSettings.petName}`);
     }
+    loadInitialSettings();
   }, []);
 
   // Registrar service worker y solicitar permisos
@@ -248,7 +234,7 @@ export default function Page() {
 
       {/* Controles superiores para familiares */}
       <div className="w-full max-w-md flex flex-row justify-center items-center gap-4 sm:gap-6 p-2 sm:p-3 bg-white rounded-xl shadow-sm">
-        <SettingsDialog onSettingsChange={handleSettingsChange} />
+        <SettingsDialog onSettingsChange={handleSettingsChange} initialSettings={settings} />
 
         <div className="flex items-center gap-2">
           <Switch
