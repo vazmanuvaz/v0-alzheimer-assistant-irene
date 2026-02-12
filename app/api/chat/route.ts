@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import OpenAI from 'openai';
+import { createClient } from '@/lib/supabase/client';
 
 const SYSTEM_PROMPT = `Eres un perro schnauzer gris cariñoso y paciente. Tu nombre es Picha. Eres el compañero de una persona mayor con Alzheimer inicial.
 
@@ -61,6 +62,23 @@ export async function POST(request: NextRequest) {
     });
 
     const responseText = completion.choices[0]?.message?.content || 'Guau guau';
+
+    // Guardar interacción en Supabase
+    try {
+      const supabase = createClient();
+      const now = new Date();
+      
+      await supabase.from('app_interactions').insert({
+        interaction_date: now.toISOString().split('T')[0],
+        interaction_hour: now.getHours(),
+        interaction_minute: now.getMinutes(),
+        question: message,
+        response: responseText,
+      });
+    } catch (dbError) {
+      console.error('[v0] Error guardando interacción:', dbError);
+      // No fallar el request si no se puede guardar en DB
+    }
 
     return NextResponse.json({ response: responseText });
   } catch (error) {
