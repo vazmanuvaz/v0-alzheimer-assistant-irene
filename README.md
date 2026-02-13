@@ -26,6 +26,18 @@ Se presenta como un perro schnauzer virtual que puede conversar por voz, mantene
 - **Email**: Resend
 - **Monitoreo**: cron-job.org
 
+#---------------------------------------------------------------------------------------------------------------------------------------
+# IMPORTANTE
+🔒 Seguridad:
+
+Las claves privadas (OpenAI, Resend, etc.) solo deben configurarse en variables de entorno en Vercel.
+
+Nunca subir .env.local al repositorio.
+
+La anon public key de Supabase es segura para frontend, pero no debe usarse para datos sensibles.
+#---------------------------------------------------------------------------------------------------------------------------------------
+
+
 ## Requisitos Previos
 
 Antes de comenzar, necesitas tener cuentas en:
@@ -83,7 +95,7 @@ SELECT 'Picha', '[
 ]'::jsonb
 WHERE NOT EXISTS (SELECT 1 FROM public.app_settings LIMIT 1);
 
-ALTER TABLE public.app_settings DISABLE ROW LEVEL SECURITY;
+ALTER TABLE public.app_settings ENABLE ROW LEVEL SECURITY;
 ```
 
 **Script 2: Tabla de Heartbeat (ping de vida)**
@@ -101,7 +113,7 @@ INSERT INTO public.app_heartbeat (last_ping)
 SELECT NOW()
 WHERE NOT EXISTS (SELECT 1 FROM public.app_heartbeat LIMIT 1);
 
-ALTER TABLE public.app_heartbeat DISABLE ROW LEVEL SECURITY;
+ALTER TABLE public.app_heartbeat ENABLE ROW LEVEL SECURITY;
 ```
 
 **Script 3: Tabla de Interacciones**
@@ -119,8 +131,33 @@ CREATE TABLE IF NOT EXISTS public.app_interactions (
 CREATE INDEX IF NOT EXISTS idx_interactions_date ON public.app_interactions(interaction_date DESC);
 CREATE INDEX IF NOT EXISTS idx_interactions_created_at ON public.app_interactions(created_at DESC);
 
-ALTER TABLE public.app_interactions DISABLE ROW LEVEL SECURITY;
+ALTER TABLE public.app_interactions ENABLE ROW LEVEL SECURITY;
 ```
+
+**Script 4: Lectura / Escritura
+
+```sql
+CREATE POLICY "Allow public read/write settings"
+ON public.app_settings
+FOR ALL
+USING (true)
+WITH CHECK (true);
+
+CREATE POLICY "Allow public read/write heartbeat"
+ON public.app_heartbeat
+FOR ALL
+USING (true)
+WITH CHECK (true);
+
+CREATE POLICY "Allow public read/write interactions"
+ON public.app_interactions
+FOR ALL
+USING (true)
+WITH CHECK (true);
+
+```
+
+
 
 #### 2.3. Obtener Credenciales
 
@@ -248,7 +285,7 @@ Ahora recibirás emails automáticos si la app pierde WiFi por más de 15 minuto
 
 - Conversaciones encriptadas en Supabase
 - API keys nunca expuestas en frontend
-- Sin compartir datos con terceros
+- No se almacenan datos personales fuera de los servicios configurados por el usuario.
 - App de uso personal
 
 ## Licencia
