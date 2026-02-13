@@ -26,7 +26,7 @@ Se presenta como un perro schnauzer virtual que puede conversar por voz, mantene
 - **Email**: Resend
 - **Monitoreo**: cron-job.org
 
-#---------------------------------------------------------------------------------------------------------------------------------------
+#-----------------------------------------------------------
 # IMPORTANTE
 🔒 Seguridad:
 
@@ -35,7 +35,7 @@ Las claves privadas (OpenAI, Resend, etc.) solo deben configurarse en variables 
 Nunca subir .env.local al repositorio.
 
 La anon public key de Supabase es segura para frontend, pero no debe usarse para datos sensibles.
-#---------------------------------------------------------------------------------------------------------------------------------------
+#-----------------------------------------------------------
 
 
 ## Requisitos Previos
