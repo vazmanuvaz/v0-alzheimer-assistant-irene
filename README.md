@@ -25,6 +25,7 @@ Se presenta como un perro schnauzer virtual que puede conversar por voz, mantene
 - **Text-to-Speech**: ElevenLabs
 - **Email**: Resend
 - **Monitoreo**: cron-job.org
+- **Package Manager**: npm (configurado con legacy-peer-deps para compatibilidad)
 
 #---------------------------------------------------------------------------------------------------------------------------------------
 # IMPORTANTE
@@ -53,10 +54,12 @@ Antes de comenzar, necesitas tener cuentas en:
 ### 1. Clonar el Repositorio
 
 ```bash
-git clone https://github.com/tu-usuario/picha-alzheimer-assistant.git
-cd picha-alzheimer-assistant
-npm install
+git clone https://github.com/vazmanuvaz/v0-alzheimer-assistant-irene.git
+cd v0-alzheimer-assistant-irene
+npm install --legacy-peer-deps
 ```
+
+**Nota**: Este proyecto usa `npm` con `--legacy-peer-deps` por compatibilidad. No uses `pnpm` o `yarn`.
 
 ### 2. Configurar Supabase
 
@@ -274,6 +277,12 @@ Ahora recibirás emails automáticos si la app pierde WiFi por más de 15 minuto
 - Verifica volumen del dispositivo
 - Interactúa con la página primero
 - Revisa conexión a internet
+
+### Problemas de Deployment en Vercel
+- El proyecto usa **npm** (no pnpm) por compatibilidad con Vercel
+- Archivos importantes: `.npmrc`, `vercel.json`
+- Si falla el build, verifica que `@supabase/supabase-js` esté en package.json dependencies
+- Para limpiar cache: Settings → Caches → Purge CDN Cache
 
 ## Instalación en Android/iOS
 
