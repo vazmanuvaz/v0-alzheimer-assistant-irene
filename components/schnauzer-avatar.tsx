@@ -15,11 +15,11 @@ interface SchnauzerAvatarProps {
 // - Ears up, mouth closed = listening
 // - Ears down, mouth open = speaking
 const IMAGES = {
-  idle: '/dog-ears-down.png?v=2',
-  blink: '/dog-blink.png?v=2',
-  listening: '/dog-ears-up.png?v=2',
-  speaking: '/dog-mouth-open.png?v=2',
-  sleeping: '/dog-sleeping.png?v=2',
+  idle: '/dog-ears-down.png?v=3',
+  blink: '/dog-blink.png?v=3',
+  listening: '/dog-ears-up.png?v=3',
+  speaking: '/dog-mouth-open.png?v=3',
+  sleeping: '/dog-sleeping.png?v=3',
 } as const;
 
 export function SchnauzerAvatar({ state }: SchnauzerAvatarProps) {
