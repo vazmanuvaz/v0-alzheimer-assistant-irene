@@ -1,15 +1,15 @@
-# Max - Asistente de Compañía
+# Irene - Asistente de Compañía
 
-PWA para personas mayores con Alzheimer inicial. Un compañero digital amigable representado por un perro schnauzer gris llamado Max.
+PWA para personas con Alzheimer inicial. Un compañero digital amigable representado por un perro schnauzer gris.
 
 ## Características
 
 - **Interfaz ultra simple**: Un solo botón grande para hablar
 - **Avatar animado**: Perro schnauzer gris con animaciones suaves
-- **Mensajes automáticos**: Se activan a las 10:00, 13:00, 16:00, 19:00 y 21:00
+- **Mensajes automáticos**: Se pueden configurar recordatorios
 - **Modo descanso**: Silencia mensajes automáticos cuando sea necesario
-- **Voz configurable**: Opción entre voz femenina y masculina
-- **PWA**: Funciona como app nativa en Android
+- **Aviso de WiFi caido**: Cron-Job configurado para enviar un mail luego de 15 minutos sin actividad
+- **Base de datos**: Creada en Supabase para almacenar horarios de recordatorios, mensajes y respuestas para seguimiento.
 
 ## Tecnologías
 
@@ -42,21 +42,6 @@ pnpm dev
 
 1. **Para la persona mayor**: Solo tocar el botón "HABLAR", hablar, y volver a tocar para enviar
 2. **Para familiares**: Usar los controles superiores para cambiar la voz o activar modo descanso
-
-## Mensajes automáticos
-
-La app reproduce mensajes automáticos en horarios fijos:
-- 10:00 - Saludo matutino
-- 13:00 - Acompañamiento del mediodía
-- 16:00 - Merienda
-- 19:00 - Tarde/noche
-- 21:00 - Despedida
-
-Los mensajes incluyen:
-- Preguntas sobre cómo se siente
-- Ejercicios de memoria suaves
-- Conversaciones sobre familiares
-- Juegos simples de memoria
 
 ## Seguridad
 
